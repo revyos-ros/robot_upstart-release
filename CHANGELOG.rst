@@ -2,6 +2,13 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.3 (2015-11-30)
+------------------
+* Updated install script to allow adding multiple launch files to a job at once
+* Fix leftover {user} tokens in template.
+* Formatting changes for new pep8.
+* Contributors: Jonathan Jekir, Mike Purvis
+
 0.1.2 (2015-03-13)
 ------------------
 * Add some basic install/uninstall tests.
