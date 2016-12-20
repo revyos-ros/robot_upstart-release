@@ -29,6 +29,7 @@ import os
 import robot_upstart
 from catkin.find_in_workspaces import find_in_workspaces
 
+import providers
 
 def get_argument_parser():
     p = argparse.ArgumentParser(
@@ -55,8 +56,17 @@ def get_argument_parser():
                    help="Specify an a value for ROS_LOG_DIR in the job launch context.")
     p.add_argument("--augment", action='store_true',
                    help="Bypass creating the job, and only copy user files. Assumes the job was previously created.")
+    p.add_argument("--provider", type=str, metavar="[upstart|systemd]",
+                   help="Specify provider if the autodetect fails to identify the correct provider")
+    p.add_argument("--symlink", action='store_true',
+                   help="Create symbolic link to job launch files instead of copying them.")
     return p
 
+def detect_provider():
+    cmd=open('/proc/1/cmdline', 'rb').read().split('\x00')[0]
+    if 'systemd' in os.path.realpath(cmd):
+        return providers.Systemd
+    return providers.Upstart
 
 def main():
     """ Implementation of the ``install`` script."""
@@ -80,7 +90,7 @@ def main():
         if not found_path:
             print "Unable to locate path %s in package %s. Installation aborted." % (pkgpath, pkg)
             return 1
-            
+
         if os.path.isfile(found_path[0]):
             # Single file, install just that.
             j.add(package=pkg, filename=pkgpath)
@@ -91,6 +101,14 @@ def main():
     if args.augment:
         j.generate_system_files = False
 
-    j.install()
+    provider=detect_provider()
+    if args.provider == 'upstart':
+        provider=providers.Upstart
+    if args.provider == 'systemd':
+        provider=providers.Systemd
+    if args.symlink:
+        j.symlink = True
+
+    j.install(Provider=provider)
 
     return 0
