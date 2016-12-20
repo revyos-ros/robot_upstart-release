@@ -1,3 +1,26 @@
+## robot_upstart (jade) - 0.2.1-0
+
+The packages in the `robot_upstart` repository were released into the `jade` distro by running `/usr/local/bin/bloom-release -r jade -t jade robot_upstart` on `Tue, 20 Dec 2016 02:42:17 -0000`
+
+The `robot_upstart` package was released.
+
+Version of package(s) in repository `robot_upstart`:
+
+- upstream repository: https://github.com/clearpathrobotics/robot_upstart.git
+- release repository: https://github.com/clearpath-gbp/robot_upstart-release.git
+- rosdistro version: `0.2.0-0`
+- old version: `0.2.0-0`
+- new version: `0.2.1-0`
+
+Versions of tools used:
+
+- bloom version: `0.5.21`
+- catkin_pkg version: `0.2.10`
+- rosdep version: `0.11.5`
+- rosdistro version: `0.4.7`
+- vcstools version: `0.1.38`
+
+
 ## robot_upstart (indigo) - 0.1.3-0
 
 The packages in the `robot_upstart` repository were released into the `indigo` distro by running `/usr/bin/bloom-release -t indigo -r indigo robot_upstart` on `Mon, 30 Nov 2015 20:45:05 -0000`
