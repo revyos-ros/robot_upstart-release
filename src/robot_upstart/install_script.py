@@ -29,18 +29,16 @@ import os
 import robot_upstart
 from catkin.find_in_workspaces import find_in_workspaces
 
+import providers
 
 def get_argument_parser():
     p = argparse.ArgumentParser(
-        description=
-        """Use this tool to quickly and easily create system startup jobs
-        which run one or more ROS launch files as a daemonized background
-        process on your computer. More advanced users will prefer to access
-        the Python API from their own setup scripts, but this exists as a
-        simple helper, an example, and a compatibility shim for previous
-        versions of robot_upstart which were bash-based.""")
+        description="""Use this tool to quickly and easily create system startup jobs which run one or more
+        ROS launch files as a daemonized background process on your computer. More advanced users will prefer
+        to access the Python API from their own setup scripts, but this exists as a simple helper, an example,
+        and a compatibility shim for previous versions of robot_upstart which were bash-based.""")
 
-    p.add_argument("pkgpath", type=str, nargs=1, metavar=("pkg/path",),
+    p.add_argument("pkgpath", type=str, nargs='+', metavar="pkg/path",
                    help="Package and path to install job launch files from.")
     p.add_argument("--job", type=str,
                    help="Specify job name. If unspecified, will be constructed from package name.")
@@ -58,8 +56,17 @@ def get_argument_parser():
                    help="Specify an a value for ROS_LOG_DIR in the job launch context.")
     p.add_argument("--augment", action='store_true',
                    help="Bypass creating the job, and only copy user files. Assumes the job was previously created.")
+    p.add_argument("--provider", type=str, metavar="[upstart|systemd]",
+                   help="Specify provider if the autodetect fails to identify the correct provider")
+    p.add_argument("--symlink", action='store_true',
+                   help="Create symbolic link to job launch files instead of copying them.")
     return p
 
+def detect_provider():
+    cmd=open('/proc/1/cmdline', 'rb').read().split('\x00')[0]
+    if 'systemd' in os.path.realpath(cmd):
+        return providers.Systemd
+    return providers.Upstart
 
 def main():
     """ Implementation of the ``install`` script."""
@@ -76,20 +83,32 @@ def main():
         workspace_setup=args.setup, rosdistro=args.rosdistro,
         master_uri=args.master, log_path=args.logdir)
 
-    found_path = find_in_workspaces(project=pkg, path=pkgpath, first_match_only=True)
-    if not found_path:
-        print "Unable to locate path %s in package %s. Installation aborted." % (pkgpath, pkg)
+    for this_pkgpath in args.pkgpath:
+        pkg, pkgpath = this_pkgpath.split('/', 1)
 
-    if os.path.isfile(found_path[0]):
-        # Single file, install just that.
-        j.add(package=pkg, filename=pkgpath)
-    else:
-        # Directory found, install everything within.
-        j.add(package=pkg, glob=os.path.join(pkgpath, "*"))
+        found_path = find_in_workspaces(project=pkg, path=pkgpath, first_match_only=True)
+        if not found_path:
+            print "Unable to locate path %s in package %s. Installation aborted." % (pkgpath, pkg)
+            return 1
+
+        if os.path.isfile(found_path[0]):
+            # Single file, install just that.
+            j.add(package=pkg, filename=pkgpath)
+        else:
+            # Directory found, install everything within.
+            j.add(package=pkg, glob=os.path.join(pkgpath, "*"))
 
     if args.augment:
         j.generate_system_files = False
 
-    j.install()
+    provider=detect_provider()
+    if args.provider == 'upstart':
+        provider=providers.Upstart
+    if args.provider == 'systemd':
+        provider=providers.Systemd
+    if args.symlink:
+        j.symlink = True
+
+    j.install(Provider=provider)
 
     return 0

@@ -91,6 +91,10 @@ class Job(object):
         # upstart conf file.
         self.generate_system_files = True
 
+        # Override this to True if you want to create symbolic link for
+        # job launch files instead of copying them.
+        self.symlink = False
+
         # Override this to True is you want the --wait flag passed to roslaunch.
         # This will be desired if the nodes spawned by this job are intended to
         # connect to an existing master.
@@ -160,6 +164,7 @@ class Job(object):
             print "  %s" % filename
 
         self._call_mutate(sudo, installation_files)
+        p.post_install()
 
     def uninstall(self, root="/", sudo="/usr/bin/sudo", Provider=providers.Upstart):
         """ Uninstall the job definition from the system.
