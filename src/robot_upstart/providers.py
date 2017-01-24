@@ -34,6 +34,15 @@ import StringIO
 
 from catkin.find_in_workspaces import find_in_workspaces
 
+
+def detect_provider():
+    cmd = open('/proc/1/cmdline', 'rb').read().split('\x00')[0]
+    print os.path.realpath(cmd)
+    if 'systemd' in os.path.realpath(cmd):
+        return Systemd
+    return Upstart
+
+
 class Generic(object):
     """ Provides only a common constructor for the moment, but as further
         providers are implemented, may provide a place to store configuration
@@ -119,10 +128,10 @@ class Upstart(Generic):
             "content": "\n".join(self.installed_files_set)}
 
         return self.installation_files
-    
+
     def post_install(self):
         return
-        
+
     def generate_uninstall(self):
         self._set_job_path()
         self._load_installed_files_set()
@@ -144,7 +153,7 @@ class Upstart(Generic):
             return self.interpreter.output.getvalue()
         self.set_job_path()
 
-        
+
 class Systemd(Generic):
     """ The Systemd implementation places the user-specified files in ``/etc/ros/DISTRO/NAME.d``,
     and creates an systemd job configuration in ``/lib/systemd/system/NAME.d``. Two additional
@@ -168,7 +177,8 @@ class Systemd(Generic):
 
             self.installation_files[os.path.join(self.root, "lib/systemd/system", self.job.name + ".service")] = {
                 "content": self._fill_template("templates/systemd_job.conf.em"), "mode": 0o644}
-            self.installation_files[os.path.join(self.root, "etc/systemd/system/multi-user.target.wants", self.job.name + ".service")] = {
+            self.installation_files[os.path.join(self.root, "etc/systemd/system/multi-user.target.wants",
+                                                 self.job.name + ".service")] = {
                 "symlink": os.path.join(self.root, "lib/systemd/system/", self.job.name + ".service")}
             self.installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-start")] = {
                 "content": self._fill_template("templates/job-start.em"), "mode": 0o755}
@@ -193,7 +203,7 @@ class Systemd(Generic):
             "content": "\n".join(self.installed_files_set)}
 
         return self.installation_files
-    
+
     def post_install(self):
         print("** To complete installation please run the following command:")
         print(" sudo systemctl daemon-reload" +
@@ -219,4 +229,3 @@ class Systemd(Generic):
             self.interpreter.file(f)
             return self.interpreter.output.getvalue()
         self.set_job_path()
-        
