@@ -1,3 +1,26 @@
+## robot_upstart (kinetic) - 0.2.2-1
+
+The packages in the `robot_upstart` repository were released into the `kinetic` distro by running `/usr/bin/bloom-release -r kinetic -t kinetic robot_upstart` on `Wed, 23 May 2018 20:06:23 -0000`
+
+The `robot_upstart` package was released.
+
+Version of package(s) in repository `robot_upstart`:
+
+- upstream repository: https://github.com/clearpathrobotics/robot_upstart.git
+- release repository: https://github.com/clearpath-gbp/robot_upstart-release.git
+- rosdistro version: `0.2.2-0`
+- old version: `0.2.2-0`
+- new version: `0.2.2-1`
+
+Versions of tools used:
+
+- bloom version: `0.6.4`
+- catkin_pkg version: `0.4.2`
+- rosdep version: `0.11.5`
+- rosdistro version: `0.6.1`
+- vcstools version: `0.1.39`
+
+
 ## robot_upstart (kinetic) - 0.2.2-0
 
 The packages in the `robot_upstart` repository were released into the `kinetic` distro by running `/usr/local/bin/bloom-release -r kinetic -t kinetic robot_upstart` on `Tue, 24 Jan 2017 03:34:19 -0000`
