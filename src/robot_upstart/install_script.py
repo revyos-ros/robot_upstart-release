@@ -46,7 +46,8 @@ def get_argument_parser():
                    help="Package and path to install job launch files from. " +
                         DESC_PKGPATH)
     p.add_argument("--job", type=str,
-                   help="Specify job name. If unspecified, will be constructed from package name.")
+                   help="Specify job name. If unspecified, will be constructed from package name (first " +
+                   "element before underscore is taken, e.g. 'myrobot' if the package name is 'myrobot_bringup').")
     p.add_argument("--interface", type=str, metavar="ethN",
                    help="Specify network interface name to associate job with.")
     p.add_argument("--user", type=str, metavar="NAME",
@@ -65,6 +66,9 @@ def get_argument_parser():
                    help="Specify provider if the autodetect fails to identify the correct provider")
     p.add_argument("--symlink", action='store_true',
                    help="Create symbolic link to job launch files instead of copying them.")
+    p.add_argument("--wait", action='store_true',
+                   help="Pass a wait flag to roslaunch.")
+
     return p
 
 
@@ -105,6 +109,8 @@ def main():
 
     if args.augment:
         j.generate_system_files = False
+    if args.wait:
+        j.roslaunch_wait = True
 
     provider = providers.detect_provider()
     if args.provider == 'upstart':
