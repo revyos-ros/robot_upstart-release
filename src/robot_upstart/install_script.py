@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Software License Agreement (BSD)
 #
 # @author    Mike Purvis <mpurvis@clearpathrobotics.com>
@@ -28,7 +28,7 @@ import os
 import robot_upstart
 from catkin.find_in_workspaces import find_in_workspaces
 
-import providers
+from . import providers
 
 DESC_PKGPATH = ("Make sure the path starts with the package name"
                 " (e.g. don't pass absolute path nor a path starting from"
@@ -46,7 +46,8 @@ def get_argument_parser():
                    help="Package and path to install job launch files from. " +
                         DESC_PKGPATH)
     p.add_argument("--job", type=str,
-                   help="Specify job name. If unspecified, will be constructed from package name.")
+                   help="Specify job name. If unspecified, will be constructed from package name (first " +
+                   "element before underscore is taken, e.g. 'myrobot' if the package name is 'myrobot_bringup').")
     p.add_argument("--interface", type=str, metavar="ethN",
                    help="Specify network interface name to associate job with.")
     p.add_argument("--user", type=str, metavar="NAME",
@@ -65,6 +66,9 @@ def get_argument_parser():
                    help="Specify provider if the autodetect fails to identify the correct provider")
     p.add_argument("--symlink", action='store_true',
                    help="Create symbolic link to job launch files instead of copying them.")
+    p.add_argument("--wait", action='store_true',
+                   help="Pass a wait flag to roslaunch.")
+
     return p
 
 
@@ -93,7 +97,7 @@ def main():
 
         found_path = find_in_workspaces(project=pkg, path=pkgpath, first_match_only=True)
         if not found_path:
-            print "Unable to locate path %s in package %s. Installation aborted." % (pkgpath, pkg)
+            print("Unable to locate path %s in package %s. Installation aborted." % (pkgpath, pkg))
             return 1
 
         if os.path.isfile(found_path[0]):
@@ -105,6 +109,8 @@ def main():
 
     if args.augment:
         j.generate_system_files = False
+    if args.wait:
+        j.roslaunch_wait = True
 
     provider = providers.detect_provider()
     if args.provider == 'upstart':
