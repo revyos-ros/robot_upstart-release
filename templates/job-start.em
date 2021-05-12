@@ -96,15 +96,15 @@ if [[ "$?" != "0" ]]; then
 fi
 log info "@(name): Generated launchfile: $LAUNCH_FILENAME"
 
-# Warn and exit if setpriv is missing from the system.
-which setpriv > /dev/null
+# Warn and exit if setuidgid is missing from the system.
+which setuidgid > /dev/null
 if [ "$?" != "0" ]; then
-  log err "@(name): Can't launch as unprivileged user without setpriv. Please install the setpriv package."
+  log err "@(name): Can't launch as unprivileged user without setuidgid. Please install daemontools package."
   exit 1
 fi
 
 # Punch it.
-setpriv --reuid @(user) --regid @(user) --init-groups roslaunch $LAUNCH_FILENAME @(roslaunch_wait?'--wait ')&
+setuidgid @(user) roslaunch $LAUNCH_FILENAME @(roslaunch_wait?'--wait ')&
 PID=$!
 
 log info "@(name): Started roslaunch as background process, PID $PID, ROS_LOG_DIR=$ROS_LOG_DIR"
