@@ -1,3 +1,26 @@
+## robot_upstart (noetic) - 0.4.1-1
+
+The packages in the `robot_upstart` repository were released into the `noetic` distro by running `/usr/bin/bloom-release -r noetic -t noetic robot_upstart` on `Wed, 12 May 2021 16:49:20 -0000`
+
+The `robot_upstart` package was released.
+
+Version of package(s) in repository `robot_upstart`:
+
+- upstream repository: https://github.com/clearpathrobotics/robot_upstart.git
+- release repository: https://github.com/clearpath-gbp/robot_upstart-release.git
+- rosdistro version: `0.4.0-1`
+- old version: `0.4.0-1`
+- new version: `0.4.1-1`
+
+Versions of tools used:
+
+- bloom version: `0.10.7`
+- catkin_pkg version: `0.4.23`
+- rosdep version: `0.20.1`
+- rosdistro version: `0.8.3`
+- vcstools version: `0.1.42`
+
+
 ## robot_upstart (melodic) - 0.3.3-1
 
 The packages in the `robot_upstart` repository were released into the `melodic` distro by running `/usr/bin/bloom-release -r melodic -t melodic robot_upstart` on `Wed, 12 May 2021 16:45:07 -0000`
