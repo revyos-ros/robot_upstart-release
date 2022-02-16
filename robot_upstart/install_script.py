@@ -26,7 +26,9 @@ import argparse
 import os
 
 import robot_upstart
-from catkin.find_in_workspaces import find_in_workspaces
+# from catkin.find_in_workspaces import find_in_workspaces
+from ament_index_python.packages import get_package_share_directory
+
 
 from . import providers
 
@@ -99,12 +101,15 @@ def main():
                   "\npkgpath passed: {}.".format(pkgpath))
             return 1
 
-        found_path = find_in_workspaces(project=pkg, path=pkgpath, first_match_only=True)
+        # found_path = find_in_workspaces(project=pkg, path=pkgpath, first_match_only=True)
+        found_path = get_package_share_directory(pkg)+"/"+pkgpath
         if not found_path:
             print("Unable to locate path %s in package %s. Installation aborted." % (pkgpath, pkg))
             return 1
 
-        if os.path.isfile(found_path[0]):
+        # if os.path.isfile(found_path[0]):
+        print("found_path: %s" % found_path)
+        if os.path.isfile(found_path):
             # Single file, install just that.
             j.add(package=pkg, filename=pkgpath)
         else:

@@ -32,7 +32,8 @@ import em
 import os
 import io
 
-from catkin.find_in_workspaces import find_in_workspaces
+# from catkin.find_in_workspaces import find_in_workspaces
+from ament_index_python.packages import get_package_share_directory
 
 
 def detect_provider():
@@ -148,7 +149,8 @@ class Upstart(Generic):
     def _fill_template(self, template):
         self.interpreter.output = io.StringIO()
         self.interpreter.reset()
-        with open(find_in_workspaces(project="robot_upstart", path=template)[0]) as f:
+        # with open(find_in_workspaces(project="robot_upstart", path=template)[0]) as f:
+        with open(get_package_share_directory("robot_upstart")+"/"+template) as f:
             self.interpreter.file(f)
             return self.interpreter.output.getvalue()
 
@@ -224,7 +226,9 @@ class Systemd(Generic):
     def _fill_template(self, template):
         self.interpreter.output = io.StringIO()
         self.interpreter.reset()
-        with open(find_in_workspaces(project="robot_upstart", path=template)[0]) as f:
+        # with open(find_in_workspaces(project="robot_upstart", path=template)[0]) as f:
+        with open(get_package_share_directory("robot_upstart")+"/"+template) as f:
+
             self.interpreter.file(f)
             return self.interpreter.output.getvalue()
         self.set_job_path()

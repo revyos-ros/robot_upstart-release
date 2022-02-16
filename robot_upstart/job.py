@@ -31,7 +31,8 @@ import json
 import subprocess
 from glob import glob as glob_files
 
-from catkin.find_in_workspaces import find_in_workspaces
+# from catkin.find_in_workspaces import find_in_workspaces
+from ament_index_python.packages import get_package_share_directory
 
 from . import providers
 
@@ -79,7 +80,7 @@ class Job(object):
 
         # Fall back on current workspace setup file if not explicitly specified.
         self.workspace_setup = workspace_setup or \
-            os.environ['CMAKE_PREFIX_PATH'].split(':')[0] + '/setup.bash'
+            os.environ['CMAKE_PREFIX_PATH'].split(':')[0] + '/../setup.bash'
 
         # Fall back on current distro if not otherwise specified.
         self.rosdistro = rosdistro or os.environ['ROS_DISTRO']
@@ -128,7 +129,8 @@ class Job(object):
         """
 
         if package:
-            search_paths = reversed(find_in_workspaces(project=package))
+            # search_paths = reversed(find_in_workspaces(project=package))
+            search_paths = (get_package_share_directory(package), )
         else:
             search_paths = ('.', )
 
@@ -140,6 +142,7 @@ class Job(object):
             for path in search_paths:
                 candidate = os.path.join(path, filename)
                 if os.path.isfile(candidate):
+                    print("candidate : %s" % candidate)
                     self.files.append(candidate)
 
         if glob:
@@ -202,12 +205,15 @@ class Job(object):
     def _call_mutate(self, sudo, installation_files):
         try:
             # Installed script location
-            mutate_files_exec = find_in_workspaces(
-                project="robot_upstart", path="mutate_files", first_match_only=True)[0]
+            # mutate_files_exec = find_in_workspaces(
+            #     project="robot_upstart", path="mutate_files", first_match_only=True)[0]
+            mutate_files_exec = get_package_share_directory("robot_upstart") + "/scripts/mutate_files"
         except IndexError:
             # Devel script location
-            mutate_files_exec = find_in_workspaces(
-                project="robot_upstart", path="scripts/mutate_files", first_match_only=True)[0]
+            # mutate_files_exec = find_in_workspaces(
+            #     project="robot_upstart", path="scripts/mutate_files", first_match_only=True)[0]
+            mutate_files_exec = get_package_share_directory("robot_upstart") + "/scripts/mutate_files"
+
 
         # If sudo is specified, then the user will be prompted at this point.
         cmd = [mutate_files_exec]

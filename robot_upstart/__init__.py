@@ -22,29 +22,5 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-import argparse
-import os
-
-import robot_upstart
-from catkin.find_in_workspaces import find_in_workspaces
-
-
-def get_argument_parser():
-    p = argparse.ArgumentParser(
-        description="""Use this script to remove upstart jobs created by the corresponding install script.""")
-
-    p.add_argument("jobname", type=str, nargs=1, metavar=("JOBNAME", ),
-                   help="Name of job to uninstall.")
-    p.add_argument("--rosdistro", type=str, metavar="DISTRO",
-                   help="Specify ROS distro this is for.")
-    return p
-
-
-def main():
-    """ Implementation of the ``uninstall`` script."""
-
-    args = get_argument_parser().parse_args()
-    j = robot_upstart.Job(name=args.jobname[0], rosdistro=args.rosdistro)
-    j.uninstall()
-
-    return 0
+from robot_upstart.job import Job
+import robot_upstart.providers
