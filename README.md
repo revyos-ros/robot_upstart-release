@@ -1,3 +1,26 @@
+## robot_upstart (foxy) - 1.0.2-1
+
+The packages in the `robot_upstart` repository were released into the `foxy` distro by running `/usr/bin/bloom-release -r foxy -t foxy robot_upstart` on `Thu, 21 Apr 2022 22:09:32 -0000`
+
+The `robot_upstart` package was released.
+
+Version of package(s) in repository `robot_upstart`:
+
+- upstream repository: https://github.com/clearpathrobotics/robot_upstart.git
+- release repository: https://github.com/clearpath-gbp/robot_upstart-release.git
+- rosdistro version: `1.0.1-1`
+- old version: `1.0.1-1`
+- new version: `1.0.2-1`
+
+Versions of tools used:
+
+- bloom version: `0.10.7`
+- catkin_pkg version: `0.4.24`
+- rosdep version: `0.21.0`
+- rosdistro version: `0.8.3`
+- vcstools version: `0.1.42`
+
+
 ## robot_upstart (galactic) - 1.0.1-1
 
 The packages in the `robot_upstart` repository were released into the `galactic` distro by running `/usr/bin/bloom-release robot_upstart -r galactic -t galactic` on `Tue, 12 Apr 2022 15:56:58 -0000`
