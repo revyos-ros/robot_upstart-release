@@ -1,3 +1,26 @@
+## robot_upstart (humble) - 1.0.4-1
+
+The packages in the `robot_upstart` repository were released into the `humble` distro by running `/home/z572/gits/revyos-ros/venv/bin/bloom-release -r humble robot_upstart --override-release-repository-push-url git@github.com:revyos-ros/robot_upstart-release.git` on `Mon, 23 Sep 2024 05:20:10 -0000`
+
+The `robot_upstart` package was released.
+
+Version of package(s) in repository `robot_upstart`:
+
+- upstream repository: https://github.com/clearpathrobotics/robot_upstart.git
+- release repository: https://github.com/revyos-ros/robot_upstart-release.git
+- rosdistro version: `1.0.4-1`
+- old version: `1.0.3-1`
+- new version: `1.0.4-1`
+
+Versions of tools used:
+
+- bloom version: `0.12.0`
+- catkin_pkg version: `1.0.0`
+- rosdep version: `0.22.2`
+- rosdistro version: `0.9.0`
+- vcstools version: `0.1.42`
+
+
 ## robot_upstart (humble) - 1.0.3-1
 
 The packages in the `robot_upstart` repository were released into the `humble` distro by running `/usr/bin/bloom-release robot_upstart -r humble -t humble` on `Fri, 14 Jul 2023 14:46:02 -0000`
